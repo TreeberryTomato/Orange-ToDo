@@ -1,0 +1,13 @@
+D:\program\ToDo\ToDo-Server\bin\Debug\netcoreapp3.1\ToDo-Server.exe
+D:\program\ToDo\ToDo-Server\bin\Debug\netcoreapp3.1\ToDo-Server.deps.json
+D:\program\ToDo\ToDo-Server\bin\Debug\netcoreapp3.1\ToDo-Server.runtimeconfig.json
+D:\program\ToDo\ToDo-Server\bin\Debug\netcoreapp3.1\ToDo-Server.runtimeconfig.dev.json
+D:\program\ToDo\ToDo-Server\bin\Debug\netcoreapp3.1\ToDo-Server.dll
+D:\program\ToDo\ToDo-Server\bin\Debug\netcoreapp3.1\ToDo-Server.pdb
+D:\program\ToDo\ToDo-Server\obj\Debug\netcoreapp3.1\ToDo-Server.csprojAssemblyReference.cache
+D:\program\ToDo\ToDo-Server\obj\Debug\netcoreapp3.1\ToDo-Server.AssemblyInfoInputs.cache
+D:\program\ToDo\ToDo-Server\obj\Debug\netcoreapp3.1\ToDo-Server.AssemblyInfo.cs
+D:\program\ToDo\ToDo-Server\obj\Debug\netcoreapp3.1\ToDo-Server.csproj.CoreCompileInputs.cache
+D:\program\ToDo\ToDo-Server\obj\Debug\netcoreapp3.1\ToDo-Server.dll
+D:\program\ToDo\ToDo-Server\obj\Debug\netcoreapp3.1\ToDo-Server.pdb
+D:\program\ToDo\ToDo-Server\obj\Debug\netcoreapp3.1\ToDo-Server.genruntimeconfig.cache
