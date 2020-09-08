@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!--layui css-->
+    <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css" />
+    <script src="https://www.layuicdn.com/layui/layui.js"></script>
+    <title>ToDo</title>
+</head>
+
+<body onload="getList()" style="background: ivory;">
+    <div class="layui-fluid">
+        <div class="layui-row">
+
+            <!--顶部水平导航栏 navigation bar on the top-->
+            <div class="layui-col-md12">
+                <ul class="layui-nav">
+
+                    <li class="layui-nav-item"><a href="#index">Orange-ToDo</a></li>
+
+                    <li class="layui-nav-item layui-this" style="margin-left: 30%;">
+                        <a href="Tasks.html">
+                            Tasks
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="#Calendar">
+                            Calendar
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item" style="float: right;">
+                        <a href="#Login">
+                            <i class="layui-icon layui-icon-username"> Login</i>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item" style="float: right;">
+                        <a href="#Search">
+                            <i class="layui-icon layui-icon-search"> Search</i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <script>
+                //注意：导航 依赖 element 模块，否则无法进行功能性操作
+                layui.use("element", function () {
+                    var element = layui.element;
+                });
+            </script>
+        </div>
+
+        <div class="layui-row">
+
+            <!--放置结果-->
+            <div class="layui-col-md10 layui-col-md-offset1" style="margin-top: 40px;">
+
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="400">
+                        <col width="400">
+                        <col width="400">
+                        <col>
+                        <col>
+                    </colgroup>
+
+                    <thead>
+                        <tr>
+                            <th>Content</th>
+                            <th>CreateDateTime</th>
+                            <th>DeadLine</th>
+                            <th>IsDone</th>
+                            <th>PriorityLevel</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <!--这里放置任务内容，开始时间，截止日期，是否完成和删除按钮-->
+                    <tbody id="tasksTable"></tbody>
+
+                    <!--获取任务列表-->
+                    <script type="text/javascript">
+                        function getinfo(url) {
+                            return new Promise(function (resolve, reject) {
+                                var xhr = new XMLHttpRequest();
+                                xhr.open('get', url, true);
+
+                                xhr.responseType = 'json';
+                                xhr.onload = function () {
+                                    var status = xhr.status;
+                                    if (status == 200) {
+                                        resolve(xhr.response);
+                                    } else {
+                                        alert(status);
+                                        reject(status);
+                                    }
+                                };
+                                xhr.send();
+                            });
+                        };
+
+                        function getList() {
+                            var url = "http://localhost:8080/v1/GetTasks/";
+
+                            getinfo(url).then(function (tasks) {
+                                var tasksTable = document.getElementById("tasksTable");
+
+                                //每次读取的时候清空保留在页面上的记录
+                                tasksTable.innerHTML = "";
+
+                                for (var i in tasks) {
+                                    var taskOBJ = document.createElement("tr");
+
+                                    var Content = tasks[i].Content;
+                                    var StartDateTime = new Date(tasks[i].StartDateTime);
+                                    var DeadLine = new Date(tasks[i].DeadLine);
+                                    var IsDone = tasks[i].IsDone;
+                                    var PriorityLevel = tasks[i].PriorityLevel;
+                                    var TaskID = tasks[i].TaskID;
+
+                                    taskOBJ.innerHTML =
+                                        `
+                                        <td id="Content">
+                                            ${Content}
+                                        </td>
+                    
+                                        <td id="StartDateTime">
+                                            ${StartDateTime}
+                                        </td>
+                    
+                                        <td id="DeadLine">
+                                            ${DeadLine}
+                                        </td>
+                    
+                                        <td id="IsDone">
+                                            ${IsDone}
+                                        </td>
+                    
+                                        <td id="PriorityLevel">
+                                            ${PriorityLevel}
+                                        </td>
+                    
+                                        <td id="Action">
+                                            <button onclick="deleteTask(this)" value="${TaskID}">
+                                                Delete
+                                            </button>
+                                        </td>
+                                        `
+
+                                    tasksTable.appendChild(taskOBJ);
+                                }
+                            }, function (status) {
+                                alert('Something went wrong.');
+                            });
+                        }
+                    </script>
+
+                    <!--删除任务-->
+                    <script type="text/javascript">
+                        function deleteTask() {
+                            var task_id = event.target.value;
+                            var url = `http://localhost:8080/v1/DeleteTask/Task?id=${task_id}`;
+                            var request = new XMLHttpRequest();
+                            
+                            var timeout = 1000; 
+                            var isTimeout = false;
+
+                            var timer = setTimeout(function () {
+                                isTimeout = true;
+                                request.abort();
+                            }, timeout);
+
+                            request.responseType = 'text';
+
+                            request.onreadystatechange = function () {
+                                if (request.readyState !== 4) {
+                                    return;
+                                }
+
+                                if (isTimeout) {
+                                    alert("Timeout, please try again");
+                                    return;
+                                }
+
+                                clearTimeout(timer);
+
+                                if (request.status >= 200 && request.status < 300 || request.status == 304) {
+                                    //重新加载页面
+                                    location.reload();
+                                }
+                                else
+                                {
+                                    alert(request.responseText);
+                                }
+
+                            };
+                            request.open("GET", url, true);
+                            request.send();
+                        }
+                    </script>
+
+                </table>
+            </div>
+
+            <div class="layui-col-md2 layui-col-md-offset5" style="margin-top: 40px;">
+                <button class="layui-btn layui-btn-radius layui-btn-normal">
+                    <a href="AddTask.html" style="font-size: 20px; color: rgb(213, 235, 177);">Create a new Task</a>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
