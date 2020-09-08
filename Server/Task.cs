@@ -13,6 +13,7 @@ namespace OrangeToDo_Server
         private DateTime _deadLine;
         private bool _isDone;
         private int _priorityLevel;
+        private string _taskID;
 
         public string Content
         {
@@ -77,6 +78,17 @@ namespace OrangeToDo_Server
             }
         }
 
+        public string TaskID
+		{
+			get
+			{
+                return _taskID;
+			}
+            set
+			{
+                _taskID = value;
+			}
+		}
 
         public Task()
         {
@@ -85,15 +97,17 @@ namespace OrangeToDo_Server
             this.DeadLine = this.StartDateTime.AddDays(1);
             this.IsDone = false;
             this.PriorityLevel = 0;
+            this.TaskID = Guid.NewGuid().ToString();
         }
 
-        public Task(string content, DateTime startDateTime, DateTime deadLine, bool isDone, int priorityLevel)
+        public Task(string content, DateTime startDateTime, DateTime deadLine, bool isDone, int priorityLevel, string taskID)
         {
             this.Content = content;
             this.StartDateTime = startDateTime;
             this.DeadLine = deadLine;
             this.IsDone = isDone;
             this.PriorityLevel = priorityLevel;
+            this.TaskID = taskID;
         }
     }
 }
