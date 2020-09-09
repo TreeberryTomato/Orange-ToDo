@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--layui css js-->
+    <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css" />
+    <script src="https://www.layuicdn.com/layui/layui.js"></script>
+
+    <title>Orange-AddTask</title>
+</head>
+<body style="background: ivory;">
+    <div class="layui-fluid">
+        <div class="layui-row">
+
+            <!--顶部水平导航栏 navigation bar on the top-->
+            <div class="layui-col-md12">
+                <ul class="layui-nav">
+
+                    <li class="layui-nav-item"><a href="#index">Orange-ToDo</a></li>
+
+                    <li class="layui-nav-item" style="margin-left: 30%;">
+                        <a href="Tasks.html">
+                            Tasks
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="#Calendar">
+                            Calendar
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item" style="float: right;">
+                        <a href="#Login">
+                            <i class="layui-icon layui-icon-username"> Login</i>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item" style="float: right;">
+                        <a href="#Search">
+                            <i class="layui-icon layui-icon-search"> Search</i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <script>
+                //注意：导航 依赖 element 模块，否则无法进行功能性操作
+                layui.use("element", function () {
+                    var element = layui.element;
+                });
+            </script>
+        </div>
+
+
+        <!--表单-->
+        <div class="layui-row" style="margin-top: 40px;">
+            <div class="layui-col-md8 layui-col-md-offset2">
+                <form class="layui-form" action="">
+
+                    <!--任务内容-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">任务内容</label>
+                        <div class="layui-input-block">
+                          <input type="text" name="content" required  lay-verify="required" placeholder="请输入任务内容" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <!--持续时间范围选择-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">时间范围</label>
+                        <div class="layui-input-block">
+                          <input id="duration" type="text" name="Duration" required lay-verify="required" placeholder="请输入任务开始和结束时间" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <script>
+                        layui.use('laydate', function(){
+                          var laydate = layui.laydate;
+                          
+                          //执行一个laydate实例
+                          laydate.render({
+                            elem: '#duration' //指定元素
+                            ,type: 'datetime'   //类型为日期时间选择器
+                            ,range: true    //时间范围选择器
+                            ,theme:'molv'   //主题选择
+                            ,calendar:true  //显示节日
+                          });
+                        });
+                    </script>
+
+                    <!--是否已经完成-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否已完成</label>
+                        <input type="radio" name="isDone" value="false" title="未完成">
+                        <input type="radio" name="isDone" value="true" title="已完成">
+                    </div>
+
+                    <!--提交或重置-->
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                          <button class="layui-btn" lay-submit lay-filter="taskForm">提交</button>
+                          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                      </div>
+                </form>
+                <script>
+                    //Demo
+                    layui.use('form', function(){
+                      var form = layui.form;
+                      
+                      //监听提交
+                      form.on('submit(taskForm)', function(data){
+                        layer.msg(JSON.stringify(data.field.isDone));
+                        return false;
+                      });
+                    });
+                </script>
+
+            </div>
+        </div>
+</body>
+</html>
