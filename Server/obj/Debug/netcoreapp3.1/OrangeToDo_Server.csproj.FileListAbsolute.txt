@@ -10,6 +10,12 @@ D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.Assembly
 D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.dll
 D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.pdb
 D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.genruntimeconfig.cache
-D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.csproj.CoreCompileInputs.cache
 D:\program\Orange-ToDo\Server\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
 D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.csproj.CopyComplete
+D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.csproj.CoreCompileInputs.cache
+D:\program\Orange-ToDo\Server\bin\Debug\netcoreapp3.1\System.Data.SqlClient.dll
+D:\program\Orange-ToDo\Server\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\sni.dll
+D:\program\Orange-ToDo\Server\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\sni.dll
+D:\program\Orange-ToDo\Server\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\sni.dll
+D:\program\Orange-ToDo\Server\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\program\Orange-ToDo\Server\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll

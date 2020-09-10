@@ -211,7 +211,8 @@ namespace OrangeToDo_Server
 				IsDone = jo["IsDone"].ToString().Equals("true"),
 			};
 
-			Console.WriteLine(task.StartDateTime.ToString()+task.IsDone.ToString());
+			SQLServerConnector connector = new SQLServerConnector();
+			Console.WriteLine(connector.AddTask(task));
 
 			byte[] buffer = Encoding.UTF8.GetBytes("还未整合数据库，暂时无法实现添加功能");
 
