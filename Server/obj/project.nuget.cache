@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "r6A9ePdWPCNMMre/ZRIrccXxFQkre69L1aNeyNVM+HSyZW1PtC6Ulk0j53CIcgAzgqnGTjCQEYfjIU3Njuneyg==",
+  "dgSpecHash": "IUjL17AgQN5IGAQ0csSUJgZRd/gJxTue9sCGvTzSUkZcgKwiefyZ5LWR/1W2uvIis0zueSDldyCSQZPpQTNalQ==",
   "success": true,
   "projectFilePath": "D:\\program\\Orange-ToDo\\Server\\OrangeToDo_Server.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\91805\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

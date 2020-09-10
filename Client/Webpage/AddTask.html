@@ -57,7 +57,7 @@
         <!--表单-->
         <div class="layui-row" style="margin-top: 40px;">
             <div class="layui-col-md8 layui-col-md-offset2">
-                <form class="layui-form" action="">
+                <form class="layui-form" method="POST" action="">
 
                     <!--任务内容-->
                     <div class="layui-form-item">
@@ -71,7 +71,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">时间范围</label>
                         <div class="layui-input-block">
-                          <input id="duration" type="text" name="Duration" required lay-verify="required" placeholder="请输入任务开始和结束时间" autocomplete="off" class="layui-input">
+                          <input id="duration" type="text" name="duration" required lay-verify="required" placeholder="请输入任务开始和结束时间" autocomplete="off" class="layui-input">
                         </div>
                     </div>
 
@@ -83,17 +83,41 @@
                           laydate.render({
                             elem: '#duration' //指定元素
                             ,type: 'datetime'   //类型为日期时间选择器
-                            ,range: true    //时间范围选择器
+                            ,range: '~'    //时间范围选择器，以~分隔开
                             ,theme:'molv'   //主题选择
                             ,calendar:true  //显示节日
                           });
                         });
                     </script>
 
+
+                    <!--重要程度-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">重要程度</label>
+                        <div class="layui-input-inline" style="margin-top:20px; margin-left: 5px;">
+                            <div id="slider" name="priorityLevel" value="1"></div>
+                        </div>
+                    </div>
+
+                    <script>
+                        layui.use('slider', function(){
+                            var slider = layui.slider;
+                            
+                            //渲染
+                            slider.render({
+                                elem: '#slider'  //绑定元素
+                                ,max: 10    //最大值为10
+                                ,min: 1     //最小值为1
+                            });
+                        });
+                    </script>
+
+
+
                     <!--是否已经完成-->
                     <div class="layui-form-item">
                         <label class="layui-form-label">是否已完成</label>
-                        <input type="radio" name="isDone" value="false" title="未完成">
+                        <input type="radio" name="isDone" value="false" title="未完成" checked>
                         <input type="radio" name="isDone" value="true" title="已完成">
                     </div>
 
@@ -106,15 +130,82 @@
                       </div>
                 </form>
                 <script>
-                    //Demo
+                    var priorityLevel = 1;
+                    layui.use('slider', function(){
+                        var slider = layui.slider;
+                            
+                        //渲染
+                        slider.render({
+                            elem: '#slider'  //绑定元素
+                            ,max: 10    //最大值为10
+                            ,min: 1     //最小值为1
+                            ,change: function(value){
+                                priorityLevel = value//动态获取滑块数值
+                            }
+                        });
+                    });
+                    //Form
                     layui.use('form', function(){
                       var form = layui.form;
                       
-                      //监听提交
-                      form.on('submit(taskForm)', function(data){
-                        layer.msg(JSON.stringify(data.field.isDone));
-                        return false;
-                      });
+                        //监听提交
+                        form.on('submit(taskForm)', function(data){
+                            var content = JSON.stringify(data.field.content).replace('"','').replace('"','');
+                            var duration = JSON.stringify(data.field.duration).replace('"','').replace('"','');
+                            var startDateTime = duration.split("~")[0];
+                            var deadLine = duration.split("~")[1];
+                            var isDone = JSON.stringify(data.field.isDone).replace('"','').replace('"','');
+                            
+
+                            var taskjson = {};  
+                            taskjson.Content = content;
+                            taskjson.StartDateTime = startDateTime;
+                            taskjson.DeadLine = deadLine;
+                            taskjson.PriorityLevel = priorityLevel;
+                            taskjson.IsDone = isDone;
+
+                            //将taskjson Post到服务器
+                            var request = new XMLHttpRequest();
+                            
+                            var url = "http://localhost:8080/v1/AddTask/";
+                            var timeout = 1000*10; 
+                            var isTimeout = false;
+
+                            var timer = setTimeout(function () {
+                                isTimeout = true;
+                                request.abort();
+                            }, timeout);
+                            
+                            request.responseType = 'text';
+                            request.onreadystatechange = function () {
+                                if (request.readyState !== 4) {
+                                    return;
+                                }
+
+                                if (isTimeout) {
+                                    alert("Timeout, please try again");
+                                    return;
+                                }
+
+                                clearTimeout(timer);
+
+                                if (request.status >= 200 && request.status < 300 || request.status == 304) {
+                                    //跳转页面
+                                    window.location.href="Tasks.html";
+                                }
+                                else
+                                {
+                                    alert(request.responseText);
+                                }
+
+                                };
+
+                            //使用HTTP POST请求与服务器交互数据
+                            request.open("POST", url, true);
+                            request.send(JSON.stringify(taskjson));
+
+                            return false;
+                        });
                     });
                 </script>
 

@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace OrangeToDo_Server
 {
@@ -8,7 +7,6 @@ namespace OrangeToDo_Server
     class Task
     {
         private string _content;
-        private DateTime _createDateTime;
         private DateTime _startDateTime;
         private DateTime _deadLine;
         private bool _isDone;

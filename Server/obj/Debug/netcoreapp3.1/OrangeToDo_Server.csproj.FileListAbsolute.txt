@@ -7,7 +7,9 @@ D:\program\Orange-ToDo\Server\bin\Debug\netcoreapp3.1\OrangeToDo_Server.pdb
 D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.csprojAssemblyReference.cache
 D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.AssemblyInfoInputs.cache
 D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.AssemblyInfo.cs
-D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.csproj.CoreCompileInputs.cache
 D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.dll
 D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.pdb
 D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.genruntimeconfig.cache
+D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.csproj.CoreCompileInputs.cache
+D:\program\Orange-ToDo\Server\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+D:\program\Orange-ToDo\Server\obj\Debug\netcoreapp3.1\OrangeToDo_Server.csproj.CopyComplete

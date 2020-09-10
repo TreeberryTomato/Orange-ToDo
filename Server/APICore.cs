@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using System.Text.Json;
 using System.Threading;
 
 namespace OrangeToDo_Server
@@ -20,6 +21,11 @@ namespace OrangeToDo_Server
 			ThreadStart threadStart_deleteTask = new ThreadStart(ListenDeleteTask);
 			Thread thread_deleteTask = new Thread(threadStart_deleteTask);
 			thread_deleteTask.Start();
+
+			//创建一个线程，监听添加任务请求
+			ThreadStart threadStart_addTask = new ThreadStart(ListenAddTask);
+			Thread thread_addTask = new Thread(threadStart_addTask);
+			thread_addTask.Start();
 		}
 
 		/// <summary>
@@ -93,7 +99,7 @@ namespace OrangeToDo_Server
 
 
 
-			string responseString = JsonSerializer.Serialize(tasks);
+			string responseString = System.Text.Json.JsonSerializer.Serialize(tasks);
 
 			byte[] buffer = Encoding.UTF8.GetBytes(responseString);
 
@@ -129,7 +135,7 @@ namespace OrangeToDo_Server
 				}
 				catch (Exception e)
 				{
-					Console.WriteLine("GetTasks service crashed");
+					Console.WriteLine("DeleteTask service crashed");
 					Console.WriteLine(e.Message);
 					break;
 				}
@@ -149,6 +155,65 @@ namespace OrangeToDo_Server
 
 
 			byte[] buffer = Encoding.UTF8.GetBytes("还未整合数据库，暂时无法实现删除功能");
+
+			// Get a response stream and write the response to it.
+			response.ContentLength64 = buffer.Length;
+			System.IO.Stream output = response.OutputStream;
+			output.Write(buffer, 0, buffer.Length);
+			response.Close();
+		}
+
+		private static void ListenAddTask()
+		{
+			string prefix = @"http://localhost:8080/v1/AddTask/";
+			HttpListener listener = new HttpListener();
+			listener.Prefixes.Add(prefix);
+			listener.Start();
+
+			while (true)
+			{
+				try
+				{
+					//等待请求连接
+					//没有请求则GetContext处于阻塞状态
+					//听到请求后创建新线程处理请求
+					HttpListenerContext context = listener.GetContext();
+					Console.WriteLine(context.Request.RawUrl);
+					ThreadPool.QueueUserWorkItem(new WaitCallback(AddTask), context);
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine("AddTask service crashed");
+					Console.WriteLine(e.Message);
+					break;
+				}
+			}
+			listener.Stop();
+		}
+
+		private static void AddTask(object context)
+		{
+			HttpListenerRequest request = ((HttpListenerContext)context).Request;
+			HttpListenerResponse response = ((HttpListenerContext)context).Response;
+			response.StatusCode = 200;
+			response.AppendHeader("Access-Control-Allow-Origin", "*");
+
+			System.IO.Stream input = request.InputStream;
+			System.IO.StreamReader reader = new System.IO.StreamReader(input, request.ContentEncoding);
+			JObject jo = (JObject)JsonConvert.DeserializeObject(reader.ReadToEnd());
+
+			Task task = new Task()
+			{
+				Content = jo["Content"].ToString(),
+				StartDateTime = Convert.ToDateTime(jo["StartDateTime"].ToString()),
+				DeadLine = Convert.ToDateTime(jo["DeadLine"].ToString()),
+				PriorityLevel = Int16.Parse(jo["PriorityLevel"].ToString()),
+				IsDone = jo["IsDone"].ToString().Equals("true"),
+			};
+
+			Console.WriteLine(task.StartDateTime.ToString()+task.IsDone.ToString());
+
+			byte[] buffer = Encoding.UTF8.GetBytes("还未整合数据库，暂时无法实现添加功能");
 
 			// Get a response stream and write the response to it.
 			response.ContentLength64 = buffer.Length;
