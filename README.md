@@ -29,4 +29,4 @@ The core program that handle http request and response.
     6. TaskID
 
 5. __SQLConnector__  
-  A bridge to the SQL Server, at present implement CreateTasksTable and AddTask functions and can be called by the APICore
+  A bridge to the SQL Server, at present implement CreateTasksTable, AddTask, DeleteTask and GetTasks functions and can be called by the APICore
