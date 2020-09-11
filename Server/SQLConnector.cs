@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 
@@ -130,6 +131,76 @@ namespace OrangeToDo_Server
 			{
 				Console.WriteLine(e.Message);
 				return false;
+			}
+		}
+
+		public bool DeleteTask(string TaskID)
+		{
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ToString()))
+				{
+					connection.Open();
+					SqlCommand cmd = connection.CreateCommand();
+					cmd.CommandText = "if object_id('Tasks', 'u') is not null select 1 else select 0";
+					if ((int)cmd.ExecuteScalar() == 0)
+					{
+						CreateTasksTable(connection);
+						return false;
+					}
+
+					cmd.CommandText = @$"DELETE FROM [dbo].[Tasks] WHERE TaskID='{TaskID}'";
+					cmd.ExecuteNonQuery();
+					return true;
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+				return false;
+			}
+		}
+	
+		public List<Task> GetTasks()
+		{
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ToString()))
+				{
+					List<Task> tasks =  new List<Task>();
+					connection.Open();
+					SqlCommand cmd = connection.CreateCommand();
+					cmd.CommandText = "if object_id('Tasks', 'u') is not null select 1 else select 0";
+					if ((int)cmd.ExecuteScalar() == 0)
+					{
+						CreateTasksTable(connection);
+						return tasks;
+					}
+					SqlDataAdapter dataAdapter = new SqlDataAdapter(@$"SELECT * FROM Tasks", connection);
+					DataSet dataSet = new DataSet();      // 创建DataSet
+					dataAdapter.Fill(dataSet, "Tasks");   // 将返回的数据集作为“表”填入DataSet中，表名可以与数据库真实的表名不同，并不影响后续的增、删、改等操作
+					DataTable tasksTable = dataSet.Tables["Tasks"];
+					foreach (DataRow taskRow in tasksTable.Rows)
+					{
+						Task task = new Task(
+							(string)taskRow["Content"],
+							Convert.ToDateTime(taskRow["StartDateTime"]),
+							Convert.ToDateTime(taskRow["DeadLine"]),
+							(bool)taskRow["IsDone"],
+							(int)taskRow["PriorityLevel"],
+							(string)taskRow["TaskID"]
+							);
+						tasks.Add(task);
+					}
+					dataSet.Dispose();        // 释放DataSet对象
+					dataAdapter.Dispose();    // 释放SqlDataAdapter对象
+					return tasks;
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+				return new List<Task>();
 			}
 		}
 	}

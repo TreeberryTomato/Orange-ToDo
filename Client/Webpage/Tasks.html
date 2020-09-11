@@ -95,7 +95,6 @@
                                     if (status == 200) {
                                         resolve(xhr.response);
                                     } else {
-                                        alert(status);
                                         reject(status);
                                     }
                                 };
@@ -154,7 +153,7 @@
                                     tasksTable.appendChild(taskOBJ);
                                 }
                             }, function (status) {
-                                alert('Something went wrong.');
+                                alert('Currently no tasks in the database');
                             });
                         }
                     </script>

@@ -74,30 +74,12 @@ namespace OrangeToDo_Server
 
 
 			//准备数据
-			Task task1 = new Task()
+			SQLServerConnector connector = new SQLServerConnector();
+			List<Task> tasks = connector.GetTasks();
+			if(tasks.Count==0)
 			{
-				Content = "完成任务1",
-				StartDateTime = DateTime.Now.ToLocalTime(),
-				DeadLine = DateTime.Now.ToLocalTime().AddDays(3),
-				IsDone = false
-			};
-
-			Task task2 = new Task()
-			{
-				Content = "完成任务2",
-				StartDateTime = DateTime.Now.ToLocalTime(),
-				DeadLine = DateTime.Now.ToLocalTime().AddDays(3),
-				IsDone = false
-			};
-
-			var tasks = new List<Task>(2);
-
-			tasks.Add(task1);
-			tasks.Add(task2);
-
-
-
-
+				response.StatusCode = 503;  //status code return to client
+			}
 
 			string responseString = System.Text.Json.JsonSerializer.Serialize(tasks);
 
@@ -147,14 +129,24 @@ namespace OrangeToDo_Server
 		{
 			HttpListenerRequest request = ((HttpListenerContext)context).Request;
 			HttpListenerResponse response = ((HttpListenerContext)context).Response;
-			response.StatusCode = 503;
 			response.AppendHeader("Access-Control-Allow-Origin", "*");
 
-			Console.WriteLine(request.RawUrl.Split("?")[1].Split("&")[0].Split("=")[1]);
+			string TaskID = request.RawUrl.Split("?")[1].Split("&")[0].Split("=")[1];
 
+			SQLServerConnector connector = new SQLServerConnector();
+			bool isSuccessful = connector.DeleteTask(TaskID);
 
-
-			byte[] buffer = Encoding.UTF8.GetBytes("还未整合数据库，暂时无法实现删除功能");
+			byte[] buffer;
+			if (isSuccessful)
+			{
+				buffer = Encoding.UTF8.GetBytes("删除成功");
+				response.StatusCode = 200;
+			}
+			else
+			{
+				buffer = Encoding.UTF8.GetBytes("删除失败，请稍后重试");
+				response.StatusCode = 503;
+			}
 
 			// Get a response stream and write the response to it.
 			response.ContentLength64 = buffer.Length;
@@ -195,7 +187,6 @@ namespace OrangeToDo_Server
 		{
 			HttpListenerRequest request = ((HttpListenerContext)context).Request;
 			HttpListenerResponse response = ((HttpListenerContext)context).Response;
-			response.StatusCode = 200;
 			response.AppendHeader("Access-Control-Allow-Origin", "*");
 
 			System.IO.Stream input = request.InputStream;
@@ -212,9 +203,19 @@ namespace OrangeToDo_Server
 			};
 
 			SQLServerConnector connector = new SQLServerConnector();
-			Console.WriteLine(connector.AddTask(task));
+			bool isSuccessful = connector.AddTask(task);
 
-			byte[] buffer = Encoding.UTF8.GetBytes("还未整合数据库，暂时无法实现添加功能");
+			byte[] buffer;
+			if (isSuccessful)
+			{
+				buffer = Encoding.UTF8.GetBytes("任务添加成功");
+				response.StatusCode = 200;
+			}
+			else
+			{
+				buffer = Encoding.UTF8.GetBytes("任务添加失败，请稍后再试");
+				response.StatusCode = 503;
+			}
 
 			// Get a response stream and write the response to it.
 			response.ContentLength64 = buffer.Length;
